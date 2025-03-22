@@ -46,10 +46,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   User.associate = (models) => {
-    User.belongsTo(models.Role, { foreignKey: "roleId", onDelete: "SET NULL" });
-    User.hasMany(models.ChatMember, { foreignKey: "user_id" });
-    User.hasMany(models.Message, { foreignKey: "user_id" });
-    User.hasMany(models.Reaction, { foreignKey: "user_id" });
+    User.belongsTo(models.Role, { foreignKey: "roleId", onDelete: "SET NULL" });  
   };
 
   return User;

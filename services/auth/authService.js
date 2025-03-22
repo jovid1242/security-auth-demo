@@ -159,6 +159,16 @@ class AuthService {
             res.status(500).json({ message: "Database error" });
         }
     };
+
+    async checkEmailAvailability(email) {
+        const exists = await User.findOne({ email });
+        return !exists;
+    }
+
+    async checkUsernameAvailability(username) {
+        const exists = await User.findOne({ username });
+        return !exists;
+    }
 }
 
 module.exports = new AuthService();

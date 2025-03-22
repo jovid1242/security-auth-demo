@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { authenticate, authorize } = require("../middleware/authMiddleware");
+const { authenticate, authorize } = require("../middlewares/authMiddleware");
 const ipFilter = require("../middlewares/ipFilterMiddeware");
 
 router.get("/dashboard", authenticate, ipFilter, (req, res) => {

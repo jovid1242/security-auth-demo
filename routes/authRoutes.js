@@ -64,10 +64,24 @@ const validateLogin = [
         .notEmpty().withMessage("Password is required")
 ];
 
+const validateEmailCheck = [
+    body("email")
+        .isEmail().withMessage("Неверный формат email")
+];
+
+const validateUsernameCheck = [
+    body("username")
+        .isString().withMessage("Имя пользователя должно быть строкой")
+        .notEmpty().withMessage("Имя пользователя обязательно")
+        .matches(/^[^\d]*$/).withMessage("Имя пользователя не должно содержать цифр")
+];
+
 router.post("/register", ipFilter, validateRegistration, authController.registration);
 router.post("/login", ipFilter, validateLogin, authController.login); 
 router.post("/login-vulnerable", ipFilter, authController.loginVulnerable);
 router.get("/refresh", ipFilter, authController.refresh);
 router.get("/me", ipFilter, authenticate, authController.me);
+router.post("/check-email", validateEmailCheck, authController.checkEmail);
+router.post("/check-username", validateUsernameCheck, authController.checkUsername);
 
 module.exports = router;

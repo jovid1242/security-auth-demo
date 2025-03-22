@@ -1,4 +1,4 @@
-const authService = require("../../services/auth/authService");
+const authService = require("../../services/auth/authService"); 
 
 class AuthController {
   async registration(req, res) {
@@ -45,6 +45,26 @@ class AuthController {
       res.json(user);
     } catch (error) {
       res.status(401).json({ error: error.message });
+    }
+  }
+
+  async checkEmail(req, res, next) {
+    try {
+      const { email } = req.body;
+      const available = await authService.checkEmailAvailability(email);
+      return res.json({ available });
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async checkUsername(req, res, next) {
+    try {
+      const { username } = req.body;
+      const available = await authService.checkUsernameAvailability(username);
+      return res.json({ available });
+    } catch (e) {
+      next(e);
     }
   }
 }

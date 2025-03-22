@@ -7,16 +7,21 @@ const ipFilter = async (req, res, next) => {
 
         const blockedIP = await IP.findOne({ where: { ip_address: clientIP, is_blocked: true } });
         if (blockedIP) {
-            return res.status(403).json({ message: "Access denied: Your IP is blocked" });
+            return res.status(403).json({ message: "доступ запрещен: ваш IP заблокирован" });
         }
 
+        try {
+            const response = await axios.get(`http://ip-api.com/json/${clientIP}`);
+            const country = response.data.countryCode;
 
-        const response = await axios.get(`http://ip-api.com/json/${clientIP}`);
-        const country = response.data.countryCode;
-
-        const blockedCountry = await IP.findOne({ where: { country, is_blocked: true } });
-        if (blockedCountry) {
-            return res.status(403).json({ message: `Access denied: Your country (${country}) is blocked` });
+            if (country) {
+                const blockedCountry = await IP.findOne({ where: { country, is_blocked: true } });
+                if (blockedCountry) {
+                    return res.status(403).json({ message: `доступ запрещен: ваша страна (${country}) заблокирована` });
+                }
+            }
+        } catch (error) {
+            console.error("IP-API request error:", error); 
         }
 
         next();
